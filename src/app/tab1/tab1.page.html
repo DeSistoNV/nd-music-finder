@@ -1,84 +1,41 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Tab One
+      Top Artists
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  yo
+<ion-content text-center padding>
+  <ion-grid>
+    <ion-col size="12">
+      <ion-button *ngIf='!access_token' href="http://localhost:8888/login" class="btn btn-primary">Log in with Spotify</ion-button>
+      <span *ngIf='access_token'>You are logged in to spotify.</span>
+    </ion-col>
+  </ion-grid>
+
+
+
+    <ion-list *ngIf='topArtists'>
+      <ion-list-header>Top Artists</ion-list-header>
+        <ion-item  *ngFor="let artist of topArtists" text-wrap>
+            <ion-thumbnail>
+                <img src="{{ artist.images[2].url }}">
+            </ion-thumbnail>
+            <ion-label>
+                {{ artist.name }}
+
+            </ion-label>
+            <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
+                <!--{{ artist.nextEvent.displayName}}-->
+            <!--</ion-text>-->
+            <a *ngIf="artist.nextEvent" style="font-size:.7rem" href="{{artist.nextEvent.uri}}"  target="_system">
+                <!--{{ artist.nextEvent.venue.displayName}}-->
+                {{ artist.nextEvent.venue.metroArea.displayName}}
+                {{ artist.nextEvent.start.date | date:'M/d/yy' }}
+            </a>
+
+        </ion-item>
+    </ion-list>
+
 </ion-content>
-
-<!--<ion-header>-->
-  <!--<ion-toolbar>-->
-    <!--<ion-title>-->
-      <!--Ionic Spotify Client-->
-    <!--</ion-title>-->
-    <!--<ion-buttons end>-->
-      <!--<button ion-button clear (click)="authWithSpotify()" *ngIf="!loggedIn">Login</button>-->
-      <!--<button ion-button clear (click)="logout()" *ngIf="loggedIn">Logout</button>-->
-    <!--</ion-buttons>-->
-  <!--</ion-toolbar>-->
-<!--</ion-header>-->
-
-<!--<ion-content>-->
-
-  <!--<div *ngIf="!loggedIn" text-center padding>Please Login to load your Playlists!</div>-->
-<!--<ion-header>-->
-  <!--<ion-toolbar>-->
-    <!--<ion-title *ngIf="playlistInfo">{{ playlistInfo.name }}</ion-title>-->
-  <!--</ion-toolbar>-->
-<!--</ion-header>-->
-
-<!--<ion-content>-->
-  <!--<ion-list>-->
-
-    <!--<ion-card *ngFor="let item of tracks">-->
-      <!--<ion-item>-->
-        <!--<ion-avatar item-start>-->
-          <!--<img [src]="item.track.album.images[0].url">-->
-        <!--</ion-avatar>-->
-        <!--<h2>{{ item.track.name }}</h2>-->
-        <!--<p>{{ item.track.artists[0].name}}</p>-->
-      <!--</ion-item>-->
-
-      <!--<ion-row>-->
-        <!--<ion-col *ngIf="item.track.preview_url && !playing">-->
-          <!--<button ion-button icon-left (click)="play(item.track.preview_url)" clear small>-->
-            <!--<ion-icon name="play"></ion-icon>-->
-            <!--Preview-->
-          <!--</button>-->
-        <!--</ion-col>-->
-        <!--<ion-col *ngIf="item.track.preview_url && playing">-->
-          <!--<button ion-button icon-left (click)="stop()" clear small>-->
-            <!--<ion-icon name="close"></ion-icon>-->
-            <!--Stop-->
-          <!--</button>-->
-        <!--</ion-col>-->
-        <!--<ion-col>-->
-          <!--<button ion-button icon-left (click)="playActiveDevice(item)" clear small>-->
-            <!--<ion-icon name="musical-note"></ion-icon>-->
-            <!--Device-->
-          <!--</button>-->
-        <!--</ion-col>-->
-        <!--<ion-col>-->
-          <!--<button ion-button icon-left (click)="open(item)" clear small>-->
-            <!--<ion-icon name="open"></ion-icon>-->
-            <!--Spotify-->
-          <!--</button>-->
-        <!--</ion-col>-->
-
-      <!--</ion-row>-->
-    <!--</ion-card>-->
-  <!--</ion-list>-->
-<!--</ion-content>-->
-  <!--<ion-list>-->
-    <!--<button ion-item *ngFor="let item of playlists" (click)="openPlaylist(item)">-->
-      <!--<ion-avatar item-start *ngIf="item.images.length > 0">-->
-        <!--<img [src]="item.images[0].url">-->
-      <!--</ion-avatar>-->
-      <!--{{ item.name }}-->
-      <!--<p>Tracks: {{ item.tracks.total }}</p>-->
-    <!--</button>-->
-  <!--</ion-list>-->
