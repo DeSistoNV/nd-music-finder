@@ -228,7 +228,7 @@ app.post('/exchange', (req, res) => {
     },
     json: true
   }, session => {
-        console.log('success', session.body);
+        console.log('success', session);
         let result = {
           "access_token": session.body.access_token,
           "expires_in": session.body.expires_in,
