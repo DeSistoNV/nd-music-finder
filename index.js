@@ -13,9 +13,18 @@ var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = 'CLIENT_ID'; // Your client id
-var client_secret = 'CLIENT_SECRET'; // Your secret
-var redirect_uri = 'REDIRECT_URI'; // Your redirect uri
+var client_id = '3a8d17239bfa424eb70ca1ca1d2f2527'; // Your client id
+var client_secret = 'a07e6e022405453fa928482d9cb6aa94'; // Your secret
+var redirect_uri = 'localhost:8000'; // Your redirect uri
+
+
+// const API_URL = "https://accounts.spotify.com/api/token";
+// const CLIENT_ID = process.env.CLIENT_ID;
+// const CLIENT_SECRET = process.env.CLIENT_SECRET;
+// const CLIENT_CALLBACK_URL = process.env.CLIENT_CALLBACK_URL;
+// const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
+//
+
 
 /**
  * Generates a random string containing numbers and letters
@@ -156,12 +165,7 @@ app.get('/refresh_token', function(req, res) {
 // var app = express();
 // dotenv.load();
 //
-// const API_URL = "https://accounts.spotify.com/api/token";
-// const CLIENT_ID = process.env.CLIENT_ID;
-// const CLIENT_SECRET = process.env.CLIENT_SECRET;
-// const CLIENT_CALLBACK_URL = process.env.CLIENT_CALLBACK_URL;
-// const ENCRYPTION_SECRET = process.env.ENCRYPTION_SECRET;
-//
+
 // app.use(bodyParser.urlencoded({
 //   extended: true
 // }));

@@ -23,60 +23,60 @@
 
   <div *ngIf="!loggedIn" text-center padding>Please Login to load your Playlists!</div>
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title *ngIf="playlistInfo">{{ playlistInfo.name }}</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <!--<ion-list>-->
 
-    <ion-card *ngFor="let item of tracks">
-      <ion-item>
-        <ion-avatar item-start>
-          <img [src]="item.track.album.images[0].url">
-        </ion-avatar>
-        <h2>{{ item.track.name }}</h2>
-        <p>{{ item.track.artists[0].name}}</p>
-      </ion-item>
+    <!--<ion-card *ngFor="let item of tracks">-->
+      <!--<ion-item>-->
+        <!--<ion-avatar item-start>-->
+          <!--<img [src]="item.track.album.images[0].url">-->
+        <!--</ion-avatar>-->
+        <!--<h2>{{ item.track.name }}</h2>-->
+        <!--<p>{{ item.track.artists[0].name}}</p>-->
+      <!--</ion-item>-->
 
-      <ion-row>
-        <ion-col *ngIf="item.track.preview_url && !playing">
-          <button ion-button icon-left (click)="play(item.track.preview_url)" clear small>
-            <ion-icon name="play"></ion-icon>
-            Preview
-          </button>
-        </ion-col>
-        <ion-col *ngIf="item.track.preview_url && playing">
-          <button ion-button icon-left (click)="stop()" clear small>
-            <ion-icon name="close"></ion-icon>
-            Stop
-          </button>
-        </ion-col>
-        <ion-col>
-          <button ion-button icon-left (click)="playActiveDevice(item)" clear small>
-            <ion-icon name="musical-note"></ion-icon>
-            Device
-          </button>
-        </ion-col>
-        <ion-col>
-          <button ion-button icon-left (click)="open(item)" clear small>
-            <ion-icon name="open"></ion-icon>
-            Spotify
-          </button>
-        </ion-col>
+      <!--<ion-row>-->
+        <!--<ion-col *ngIf="item.track.preview_url && !playing">-->
+          <!--<button ion-button icon-left (click)="play(item.track.preview_url)" clear small>-->
+            <!--<ion-icon name="play"></ion-icon>-->
+            <!--Preview-->
+          <!--</button>-->
+        <!--</ion-col>-->
+        <!--<ion-col *ngIf="item.track.preview_url && playing">-->
+          <!--<button ion-button icon-left (click)="stop()" clear small>-->
+            <!--<ion-icon name="close"></ion-icon>-->
+            <!--Stop-->
+          <!--</button>-->
+        <!--</ion-col>-->
+        <!--<ion-col>-->
+          <!--<button ion-button icon-left (click)="playActiveDevice(item)" clear small>-->
+            <!--<ion-icon name="musical-note"></ion-icon>-->
+            <!--Device-->
+          <!--</button>-->
+        <!--</ion-col>-->
+        <!--<ion-col>-->
+          <!--<button ion-button icon-left (click)="open(item)" clear small>-->
+            <!--<ion-icon name="open"></ion-icon>-->
+            <!--Spotify-->
+          <!--</button>-->
+        <!--</ion-col>-->
 
-      </ion-row>
-    </ion-card>
-  </ion-list>
-</ion-content>
-  <ion-list>
-    <button ion-item *ngFor="let item of playlists" (click)="openPlaylist(item)">
-      <ion-avatar item-start *ngIf="item.images.length > 0">
-        <img [src]="item.images[0].url">
-      </ion-avatar>
-      {{ item.name }}
-      <p>Tracks: {{ item.tracks.total }}</p>
-    </button>
-  </ion-list>
+      <!--</ion-row>-->
+    <!--</ion-card>-->
+  <!--</ion-list>-->
+<!--</ion-content>-->
+  <!--<ion-list>-->
+    <!--<button ion-item *ngFor="let item of playlists" (click)="openPlaylist(item)">-->
+      <!--<ion-avatar item-start *ngIf="item.images.length > 0">-->
+        <!--<img [src]="item.images[0].url">-->
+      <!--</ion-avatar>-->
+      <!--{{ item.name }}-->
+      <!--<p>Tracks: {{ item.tracks.total }}</p>-->
+    <!--</button>-->
+  <!--</ion-list>-->
 </ion-content>
