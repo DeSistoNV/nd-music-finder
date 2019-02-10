@@ -84,6 +84,8 @@ app.get('/callback/:isMobile', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
   var isMobile = (req.params.isMobile === 'true');
 
+  console.log('code', code)
+
   let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
   console.log('isMobile',isMobile);
   console.log('redir', redir);
@@ -109,18 +111,11 @@ app.get('/callback/:isMobile', function(req, res) {
     };
 
     request.post(authOptions, function(error, response, body) {
+      console.log('body', body);
       if (!error && response.statusCode === 200) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
-
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-
-        // we can also pass the token to the browser to make requests from there
 
         res.redirect(redir +
           querystring.stringify({
