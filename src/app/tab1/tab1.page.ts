@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import * as SpotifyWebApi from 'spotify-web-api-js';
+import { IonicPage } from 'ionic-angular';
+
 
 interface Params {
   access_token?: string;
@@ -54,6 +56,7 @@ export class Tab1Page {
         let e = /([^&;=]+)=?([^&;]*)/g;
         const r = /([^&;=]+)=?([^&;]*)/g;
         const q = window.location.hash.substring(1);
+        alert(JSON.stringify(window.location));
         while (e = r.exec(q) as any) {
             hashParams[e[1]] = decodeURIComponent(e[2]);
         }
@@ -63,6 +66,7 @@ export class Tab1Page {
         const spotifyBS: any = SpotifyWebApi;
         this.spotifyApi = new spotifyBS();
         const params = Tab1Page.getHashParams();
+        alert(params);
         this.access_token = params.access_token;
         this.refresh_token = params.refresh_token;
         const error = params.error;

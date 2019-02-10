@@ -87,7 +87,7 @@ app.get('/callback/:isMobile', function(req, res) {
 
   console.log('code', code)
 
-  let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
+  let redir = isMobile ? 'nd-event-finder://tabs/tab1#' : 'http://localhost:8100/tabs/tab1#';
   console.log('isMobile',isMobile);
   console.log('redir', redir);
 

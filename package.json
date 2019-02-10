@@ -47,6 +47,7 @@
     "express": "^4.16.4",
     "http": "0.0.0",
     "ionic-angular": "^3.9.3",
+    "ionic-plugin-deeplinks": "1.0.17",
     "querystring": "^0.2.0",
     "request": "^2.88.0",
     "rxjs": "~6.3.3",
