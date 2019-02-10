@@ -17,6 +17,8 @@ var client_id = '3a8d17239bfa424eb70ca1ca1d2f2527'; // Your client id
 var client_secret = 'a07e6e022405453fa928482d9cb6aa94'; // Your secret
 var redirect_uri = 'https://nd-event-finder.herokuapp.com:5000/callback'; // Your redirect uri
 
+const PORT = process.env.PORT || 5000;
+
 
 // const API_URL = "https://accounts.spotify.com/api/token";
 // const CLIENT_ID = process.env.CLIENT_ID;
@@ -162,7 +164,7 @@ app.get('/favicon.ico', function(req, res) {
   res.send({})
 });
 
-app.listen(5000);
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 
 // var
