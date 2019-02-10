@@ -51,6 +51,9 @@ app.use(express.static(__dirname + '/public'))
 
 app.get('/login', function(req, res) {
 
+  var isMobile = req.query.isMobile;
+
+
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -61,7 +64,7 @@ app.get('/login', function(req, res) {
       response_type: 'code',
       client_id: client_id,
       scope: scope,
-      redirect_uri: redirect_uri,
+      redirect_uri: `${redirect_uri}?isMobile=${isMobile}`,
       state: state
     }));
 });
@@ -74,6 +77,7 @@ app.get('/callback', function(req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
+  var isMobile = req.isMobile;
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -113,7 +117,9 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('http://localhost:8100/tabs/tab1#' +
+        let redir = isMobile ? 'nd-event-finder://callback' : 'http://localhost:8100/tabs/tab1#';
+
+        res.redirect(isMobile +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token

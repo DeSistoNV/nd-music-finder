@@ -7,12 +7,37 @@ interface Params {
   error ?: string;
 }
 
+const isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
+
+
+
 export class Tab1Page {
+
 
     access_token;
     refresh_token;
@@ -20,6 +45,8 @@ export class Tab1Page {
     topTracks;
     topArtists;
     songKick_key = 'ivWBUlnsQwVDaYvg';
+
+    loginApi = `https://nd-event-finder.herokuapp.com/login?mobile=${isMobile.any()}"`;
 
     static getHashParams() {
         const hashParams: Params = {};
