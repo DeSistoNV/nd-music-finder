@@ -6,29 +6,32 @@
   </ion-toolbar>
 </ion-header>
 
-
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Spotify Client
-    </ion-title>
-    <ion-buttons end>
-      <button ion-button clear (click)="authWithSpotify()" *ngIf="!loggedIn">Login</button>
-      <button ion-button clear (click)="logout()" *ngIf="loggedIn">Logout</button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  yo
+</ion-content>
 
-  <div *ngIf="!loggedIn" text-center padding>Please Login to load your Playlists!</div>
-<ion-header>
-  <ion-toolbar>
-    <ion-title *ngIf="playlistInfo">{{ playlistInfo.name }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!--<ion-header>-->
+  <!--<ion-toolbar>-->
+    <!--<ion-title>-->
+      <!--Ionic Spotify Client-->
+    <!--</ion-title>-->
+    <!--<ion-buttons end>-->
+      <!--<button ion-button clear (click)="authWithSpotify()" *ngIf="!loggedIn">Login</button>-->
+      <!--<button ion-button clear (click)="logout()" *ngIf="loggedIn">Logout</button>-->
+    <!--</ion-buttons>-->
+  <!--</ion-toolbar>-->
+<!--</ion-header>-->
 
-<ion-content>
+<!--<ion-content>-->
+
+  <!--<div *ngIf="!loggedIn" text-center padding>Please Login to load your Playlists!</div>-->
+<!--<ion-header>-->
+  <!--<ion-toolbar>-->
+    <!--<ion-title *ngIf="playlistInfo">{{ playlistInfo.name }}</ion-title>-->
+  <!--</ion-toolbar>-->
+<!--</ion-header>-->
+
+<!--<ion-content>-->
   <!--<ion-list>-->
 
     <!--<ion-card *ngFor="let item of tracks">-->
@@ -79,4 +82,3 @@
       <!--<p>Tracks: {{ item.tracks.total }}</p>-->
     <!--</button>-->
   <!--</ion-list>-->
-</ion-content>

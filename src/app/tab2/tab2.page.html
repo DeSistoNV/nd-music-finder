@@ -7,30 +7,11 @@
 </ion-header>
 
 <ion-content>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <a href="https://nd-event-finder.herokuapp.com/login" class="btn btn-primary">Log in with Spotify</a>
 
-<!doctype html>
-<html>
-  <head>
-    <title>Example of the Authorization Code flow with Spotify</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style type="text/css">
-      #login, #loggedin {
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
-    </style>
-  </head>
-
-  <body>
     <div class="container">
-      <div id="login">
         <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
       </div>
       <div id="loggedin">
         <div id="user-profile">
@@ -39,7 +20,6 @@
         </div>
         <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
       </div>
-    </div>
 
     <script id="user-profile-template" type="text/x-handlebars-template">
       <h1>Logged in as {{display_name}}</h1>
@@ -123,7 +103,7 @@
           }
           document.getElementById('obtain-new-token').addEventListener('click', function() {
             $.ajax({
-              url: '/refresh_token',
+              url: 'https://nd-event-finder.herokuapp.com/refresh_token',
               data: {
                 'refresh_token': refresh_token
               }
@@ -138,6 +118,4 @@
         }
       })();
     </script>
-  </body>
-</html>
 </ion-content>
