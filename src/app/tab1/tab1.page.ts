@@ -46,7 +46,7 @@ export class Tab1Page {
     topArtists;
     songKick_key = 'ivWBUlnsQwVDaYvg';
 
-    loginApi = `https://nd-event-finder.herokuapp.com/login?mobile=${!!isMobile.any()}`;
+    loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
 
     static getHashParams() {
         const hashParams: Params = {};

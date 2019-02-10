@@ -51,11 +51,11 @@ app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
 
-app.get('/login', function(req, res) {
+app.get('/login/:isMobile', function(req, res) {
 
-  var isMobile = req.query.isMobile;
+  var isMobile = req.params.isMobile;
   console.log(isMobile);
-  ru = `${redirect_uri}?isMobile=${isMobile}`;
+  ru = `${redirect_uri}/${isMobile}`;
   console.log(ru);
 
   var state = generateRandomString(16);
@@ -73,15 +73,16 @@ app.get('/login', function(req, res) {
     }));
 });
 
-app.get('/callback', function(req, res) {
+app.get('/callback/:isMobile', function(req, res) {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
 
+
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-  var isMobile = req.isMobile;
+  var isMobile = req.params.isMobile;
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
