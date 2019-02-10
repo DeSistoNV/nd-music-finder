@@ -229,7 +229,7 @@ app.post('/exchange', (req, res) => {
     json: true
   }, (error, response, body) => {
         console.log('error', error);
-        console.log('response', response);
+        console.log('statusCode', response.statusCode);
         console.log('body', body);
         let result = {
           "access_token": body.access_token,
