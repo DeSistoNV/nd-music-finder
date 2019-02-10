@@ -84,6 +84,8 @@ app.get('/callback/:isMobile', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
   var isMobile = req.params.isMobile;
 
+  let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
+
   if (state === null || state !== storedState) {
     res.redirect('/#' +
       querystring.stringify({
@@ -122,7 +124,6 @@ app.get('/callback/:isMobile', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
 
         res.redirect(isMobile +
           querystring.stringify({
