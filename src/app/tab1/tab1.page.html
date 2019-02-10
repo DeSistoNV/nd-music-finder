@@ -9,7 +9,7 @@
 <ion-content text-center padding>
   <ion-grid>
     <ion-col size="12">
-      <ion-button *ngIf='!access_token' href="{{ loginApi }}" class="btn btn-primary">Log in with Spotify</ion-button>
+      <ion-button *ngIf='!access_token' (click)="authorize()" class="btn btn-primary">Log in with Spotify</ion-button>
         <span style="text:red">{{ error }}</span>
       <span *ngIf='access_token'>You are logged in to spotify.</span>
     </ion-col>

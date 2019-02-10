@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import * as SpotifyWebApi from 'spotify-web-api-js';
 import { IonicPage } from 'ionic-angular';
 
+declare var cordova: any;
+
 
 interface Params {
   access_token?: string;
@@ -30,6 +32,7 @@ const isMobile = {
     }
 };
 
+@IonicPage()
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -51,12 +54,13 @@ export class Tab1Page {
 
     loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
 
+
+
     static getHashParams() {
         const hashParams: Params = {};
         let e = /([^&;=]+)=?([^&;]*)/g;
         const r = /([^&;=]+)=?([^&;]*)/g;
         const q = window.location.hash.substring(1);
-        alert(JSON.stringify(window.location));
         while (e = r.exec(q) as any) {
             hashParams[e[1]] = decodeURIComponent(e[2]);
         }
@@ -66,7 +70,6 @@ export class Tab1Page {
         const spotifyBS: any = SpotifyWebApi;
         this.spotifyApi = new spotifyBS();
         const params = Tab1Page.getHashParams();
-        alert(params);
         this.access_token = params.access_token;
         this.refresh_token = params.refresh_token;
         const error = params.error;
@@ -120,6 +123,35 @@ export class Tab1Page {
                 })
             }).then(res => console.log(res));
     }
+
+    authorize() {
+        if (isMobile.any()) {
+            this.mobileAuthWithSpotify();
+        } else {
+            location.href = this.loginApi;
+
+        }
+    }
+
+    mobileAuthWithSpotify() {
+        const config = {
+          clientId: '3a8d17239bfa424eb70ca1ca1d2f2527',
+          redirectUrl: 'nd-event-finder://callback',
+          scopes: ['user-top-read'],
+          tokenExchangeUrl: 'https://nd-event-finder.herokuapp.com/exchange',
+          tokenRefreshUrl: 'https://nd-event-finder.herokuapp.com/refresh',
+        };
+
+
+    cordova.plugins.spotifyAuth.authorize(config)
+      .then(({ accessToken, encryptedRefreshToken, expiresAt }) => {
+          this.access_token = accessToken;
+          alert(this.access_token);
+          this.spotifyApi.setAccessToken(accessToken);
+      }, err => {
+        alert(err);
+      });
+  }
 
 
 }
