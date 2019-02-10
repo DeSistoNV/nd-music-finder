@@ -85,6 +85,8 @@ app.get('/callback/:isMobile', function(req, res) {
   var isMobile = req.params.isMobile;
 
   let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
+  console.log('isMobile',isMobile);
+  console.log('redir', redir);
 
   if (state === null || state !== storedState) {
     res.redirect('/#' +
@@ -131,7 +133,6 @@ app.get('/callback/:isMobile', function(req, res) {
             refresh_token: refresh_token
           }));
       } else {
-        console.log(error);
         res.redirect(redir +
           querystring.stringify({
             error: 'invalid_token'
