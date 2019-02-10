@@ -229,6 +229,7 @@ app.post('/exchange', (req, res) => {
       return res.send(result);
     })
     .catch(response => {
+      console.log('caught:', response)
       return res.json(response);
     });
 });
