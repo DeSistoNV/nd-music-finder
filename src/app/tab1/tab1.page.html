@@ -6,36 +6,77 @@
   </ion-toolbar>
 </ion-header>
 
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Ionic Spotify Client
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button clear (click)="authWithSpotify()" *ngIf="!loggedIn">Login</button>
+      <button ion-button clear (click)="logout()" *ngIf="loggedIn">Logout</button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-    <ion-card class="welcome-card">
-      <ion-img src="/assets/shapes.svg"></ion-img>
-      <ion-card-header>
-        <ion-card-subtitle>Get Started</ion-card-subtitle>
-        <ion-card-title>Welcome to Ionic</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
-      </ion-card-content>
+
+  <div *ngIf="!loggedIn" text-center padding>Please Login to load your Playlists!</div>
+<ion-header>
+  <ion-navbar>
+    <ion-title *ngIf="playlistInfo">{{ playlistInfo.name }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+
+    <ion-card *ngFor="let item of tracks">
+      <ion-item>
+        <ion-avatar item-start>
+          <img [src]="item.track.album.images[0].url">
+        </ion-avatar>
+        <h2>{{ item.track.name }}</h2>
+        <p>{{ item.track.artists[0].name}}</p>
+      </ion-item>
+
+      <ion-row>
+        <ion-col *ngIf="item.track.preview_url && !playing">
+          <button ion-button icon-left (click)="play(item.track.preview_url)" clear small>
+            <ion-icon name="play"></ion-icon>
+            Preview
+          </button>
+        </ion-col>
+        <ion-col *ngIf="item.track.preview_url && playing">
+          <button ion-button icon-left (click)="stop()" clear small>
+            <ion-icon name="close"></ion-icon>
+            Stop
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left (click)="playActiveDevice(item)" clear small>
+            <ion-icon name="musical-note"></ion-icon>
+            Device
+          </button>
+        </ion-col>
+        <ion-col>
+          <button ion-button icon-left (click)="open(item)" clear small>
+            <ion-icon name="open"></ion-icon>
+            Spotify
+          </button>
+        </ion-col>
+
+      </ion-row>
     </ion-card>
-    <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>Resources</ion-label>
-      </ion-list-header>
-      <ion-item href="https://ionicframework.com/docs/">
-        <ion-icon slot="start" color="medium" name="book"></ion-icon>
-        <ion-label>Ionic Documentation</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/building/scaffolding">
-        <ion-icon slot="start" color="medium" name="build"></ion-icon>
-        <ion-label>Scaffold Out Your App</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/layout/structure">
-        <ion-icon slot="start" color="medium" name="grid"></ion-icon>
-        <ion-label>Change Your App Layout</ion-label>
-      </ion-item>
-      <ion-item href="https://ionicframework.com/docs/theming/basics">
-        <ion-icon slot="start" color="medium" name="color-fill"></ion-icon>
-        <ion-label>Theme Your App</ion-label>
-      </ion-item>
-    </ion-list>
+  </ion-list>
+</ion-content>
+  <ion-list>
+    <button ion-item *ngFor="let item of playlists" (click)="openPlaylist(item)">
+      <ion-avatar item-start *ngIf="item.images.length > 0">
+        <img [src]="item.images[0].url">
+      </ion-avatar>
+      {{ item.name }}
+      <p>Tracks: {{ item.tracks.total }}</p>
+    </button>
+  </ion-list>
 </ion-content>
