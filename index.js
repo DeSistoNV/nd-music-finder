@@ -162,10 +162,10 @@ app.get('/refresh_token', function(req, res) {
     if (!error && response.statusCode === 200) {
         var access_token = body.access_token;
         var expires_in = body.expires_in;
-        res.send({
-              'access_token': access_token,
+          res.send({
+            'access_token': access_token,
               'expires_in' : expires_in
-        });
+          });
     }
   });
 });
@@ -174,7 +174,32 @@ app.get('/favicon.ico', function(req, res) {
   res.send({})
 });
 
-
+const spotifyRequest = params => {
+  return new Promise((resolve, reject) => {
+      request.post(API_URL, {
+        form: params,
+        headers: {
+          "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
+        },
+        json: true
+      }, (err, resp) => err ? reject(err) : resolve(resp));
+    })
+    .then(resp => {
+      if (resp.statusCode != 200) {
+        return Promise.reject({
+          statusCode: resp.statusCode,
+          body: resp.body
+        });
+      }
+      return Promise.resolve(resp.body);
+    })
+    .catch(err => {
+      return Promise.reject({
+        statusCode: 500,
+        body: JSON.stringify({})
+      });
+    });
+};
 
 // Route to obtain a new Token
 app.post('/exchange', (req, res) => {
@@ -199,6 +224,33 @@ app.post('/exchange', (req, res) => {
         "refresh_token": encrypt(session.refresh_token)
       };
       return res.send(result);
+    })
+    .catch(response => {
+      return res.json(response);
+    });
+});
+
+// Get a new access token from a refresh token
+app.post('/refresh', (req, res) => {
+  const params = req.body;
+  console.log('params: ', params);
+
+  if (!params.refresh_token) {
+    return res.json({
+      "error": "Parameter missing"
+    });
+  }
+
+  spotifyRequest({
+      grant_type: "refresh_token",
+      refresh_token: decrypt(params.refresh_token)
+    })
+    .then(session => {
+      console.log('session', session);
+      return res.send({
+          "access_token": session.access_token,
+          "expires_in": session.expires_in
+      });
     })
     .catch(response => {
       return res.json(response);
