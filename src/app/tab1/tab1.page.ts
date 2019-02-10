@@ -149,7 +149,7 @@ export class Tab1Page {
           this.access_token = res.accessToken;
           this.spotifyApi.setAccessToken(this.access_token);
       }, err => {
-        alert(err);
+        alert('error: ' + err);
       });
   }
 

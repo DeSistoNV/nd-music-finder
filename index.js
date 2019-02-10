@@ -50,9 +50,16 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/public'))
-   .use(cors())
-   .use(cookieParser());
+app
+    .use(express.static(__dirname + '/public'))
+    .use(cors({
+      origin: true,
+      credentials: true
+    }))
+    .use(cookieParser())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(bodyParser.json());
+
 
 app.get('/login/:isMobile', function(req, res) {
 
@@ -168,15 +175,6 @@ app.get('/favicon.ico', function(req, res) {
 
 
 
-
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json());
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
 
 
 
