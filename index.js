@@ -152,6 +152,10 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+app.get('/favicon.ico', function(req, res) {
+  res.send({})
+});
+
 
 // var
 //   cors = require('cors'),
