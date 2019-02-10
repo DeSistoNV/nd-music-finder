@@ -1,5 +1,7 @@
 {
   "name": "nd-event-finder",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
