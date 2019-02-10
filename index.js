@@ -82,7 +82,7 @@ app.get('/callback/:isMobile', function(req, res) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
-  var isMobile = req.params.isMobile;
+  var isMobile = (req.params.isMobile === 'true');
 
   let redir = isMobile ? 'nd-event-finder://callback#' : 'http://localhost:8100/tabs/tab1#';
   console.log('isMobile',isMobile);
