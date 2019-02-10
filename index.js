@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 5000;
 const API_URL = "https://accounts.spotify.com/api/token";
 const CLIENT_ID = client_id;
 const CLIENT_SECRET = client_secret;
-const CLIENT_CALLBACK_URL = 'nd-event-finder://';
+const CLIENT_CALLBACK_URL = 'nd-event-finder://callback';
 
 const ENCRYPTION_SECRET = client_secret;
 
