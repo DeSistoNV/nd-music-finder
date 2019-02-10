@@ -139,7 +139,7 @@ export class Tab1Page {
           redirectUrl: 'nd-event-finder://callback',
           scopes: ['user-top-read'],
           tokenExchangeUrl: 'https://nd-event-finder.herokuapp.com/exchange',
-          tokenRefreshUrl: 'https://nd-event-finder.herokuapp.com/refresh',
+          tokenRefreshUrl: 'https://nd-event-finder.herokuapp.com/refresh_token',
         };
 
 

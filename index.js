@@ -15,10 +15,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 var CryptoJS = require('crypto-js');
-require('es6-promise/auto');
-const request = require('request');
-const qs = require('qs');
-
 
 var client_id = '3a8d17239bfa424eb70ca1ca1d2f2527'; // Your client id
 var client_secret = 'a07e6e022405453fa928482d9cb6aa94'; // Your secret
@@ -85,7 +81,6 @@ app.get('/login/:isMobile', function(req, res) {
       redirect_uri: ru,
       state: state
     }));
-
 });
 
 app.get('/callback/:isMobile', function(req, res) {
@@ -165,10 +160,12 @@ app.get('/refresh_token', function(req, res) {
 
   request.post(authOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.send({
-        'access_token': access_token
-      });
+        var access_token = body.access_token;
+        var expires_in = body.expires_in;
+        res.send({
+              'access_token': access_token,
+              'expires_in' : expires_in
+        });
     }
   });
 });
@@ -179,143 +176,46 @@ app.get('/favicon.ico', function(req, res) {
 
 
 
+// Route to obtain a new Token
+app.post('/exchange', (req, res) => {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function cors(response) {
-  if (response) {
-    const headers = response.headers || {};
-    headers["Access-Control-Allow-Origin"] = "*"; // Required for CORS support to work
-    headers["Access-Control-Allow-Credentials"] = true;  // Required for cookies, authorization headers with HTTPS
-    response.headers = headers;
+  const params = req.body;
+  if (!params.code) {
+    return res.json({
+      "error": "Parameter missing"
+    });
   }
-  return response;
-}
 
-const spotifyRequest = params => {
-    return new Promise((resolve, reject) => {
-        request.post(API_URL, {
-            form: params,
-            headers: {
-                "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
-            }
-        }, (err, resp) => err ? reject(err) : resolve(resp));
+  spotifyRequest({
+      grant_type: "authorization_code",
+      redirect_uri: CLIENT_CALLBACK_URL,
+      code: params.code
     })
-        .then(resp => {
-            if (resp.statusCode != 200) {
-                return Promise.reject({
-                    statusCode: resp.statusCode,
-                    body: resp.body
-                });
-            }
+    .then(session => {
+      console.log('session', session);
+      let result = {
+        "access_token": session.access_token,
+        "expires_in": session.expires_in,
+        "refresh_token": encrypt(session.refresh_token)
+      };
+      return res.send(result);
+    })
+    .catch(response => {
+      return res.json(response);
+    });
+});
 
-            const session = JSON.parse(resp.body);
-            return Promise.resolve(session);
-        })
-        .catch(err => {
-            console.error(err);
-            return Promise.reject({
-                statusCode: 500,
-                body: JSON.stringify({})
-            });
-        });
+
+
+// Helper functions
+function encrypt(text) {
+  return CryptoJS.AES.encrypt(text, ENCRYPTION_SECRET).toString();
 };
 
-module.exports.exchangeCode = (event, context, callback) => {
-    const params = qs.parse(event.body);
-
-    if (!params.code) {
-        callback(null, cors({
-            statusCode: 400,
-            body: JSON.stringify({
-                "error" : "Parameter missing"
-            })
-        }));
-        return;
-    }
-
-    spotifyRequest({
-        grant_type: "authorization_code",
-        redirect_uri: CLIENT_CALLBACK_URL,
-        code: params.code
-    })
-        .then(session => {
-            return Promise.resolve({
-                statusCode: 200,
-                body: JSON.stringify({
-                    "access_token" : session.access_token,
-                    "expires_in" : session.expires_in,
-                    "refresh_token" : crypto.encrypt(session.refresh_token, ENCRYPTION_SECRET)
-                })
-            });
-        })
-        .catch(response => {
-            return Promise.resolve(response);
-        })
-        .then(response => {
-           callback(null, cors(response));
-        });
+function decrypt(text) {
+  var bytes = CryptoJS.AES.decrypt(text, ENCRYPTION_SECRET);
+  return bytes.toString(CryptoJS.enc.Utf8);
 };
-
-module.exports.refreshToken = (event, context, callback) => {
-    const params = qs.parse(event.body);
-
-    if (!params.refresh_token) {
-        callback(null, cors({
-            statusCode: 400,
-            body: JSON.stringify({
-                "error" : "Parameter missing"
-            })
-        }));
-        return;
-    }
-
-    spotifyRequest({
-        grant_type: "refresh_token",
-        refresh_token: crypto.decrypt(params.refresh_token, ENCRYPTION_SECRET)
-    })
-        .then(session => {
-            return Promise.resolve({
-                statusCode: 200,
-                body: JSON.stringify({
-                    "access_token" : session.access_token,
-                    "expires_in" : session.expires_in
-                })
-            });
-        })
-        .catch(response => {
-            return Promise.resolve(response);
-        })
-        .then(response => {
-            callback(null, cors(response));
-        });
-};
-
-
-
-
-
-
-
-
-
-
-
 
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
