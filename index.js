@@ -227,18 +227,16 @@ app.post('/exchange', (req, res) => {
       "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
     },
     json: true
-  }, session => {
-        console.log('success', session);
+  }, (error, response, body) => {
+        console.log('error', error);
+        console.log('response', response);
+        console.log('body', body);
         let result = {
-          "access_token": session.body.access_token,
-          "expires_in": session.body.expires_in,
-          "refresh_token": encrypt(session.body.refresh_token)
+          "access_token": body.access_token,
+          "expires_in": body.expires_in,
+          "refresh_token": encrypt(body.refresh_token)
         };
         return res.send(result);
-    },
-      response => {
-      console.log('catch:', response);
-      return res.json(response);
     })
 });
 
