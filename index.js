@@ -272,13 +272,6 @@ function decrypt(text) {
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 
-// Start the server
-var server = http.createServer(app);
-
-server.listen(process.env.PORT || 5000, function (err) {
-  console.info('listening in http://localhost:8080');
-});
-
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
