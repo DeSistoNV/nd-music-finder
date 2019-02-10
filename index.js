@@ -54,7 +54,9 @@ app.use(express.static(__dirname + '/public'))
 app.get('/login', function(req, res) {
 
   var isMobile = req.query.isMobile;
-
+  console.log(isMobile);
+  ru = `${redirect_uri}?isMobile=${isMobile}`;
+  console.log(ru);
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -66,7 +68,7 @@ app.get('/login', function(req, res) {
       response_type: 'code',
       client_id: client_id,
       scope: scope,
-      redirect_uri: `${redirect_uri}?isMobile=${isMobile}`,
+      redirect_uri: ru,
       state: state
     }));
 });
