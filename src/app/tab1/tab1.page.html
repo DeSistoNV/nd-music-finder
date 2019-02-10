@@ -9,7 +9,7 @@
 <ion-content text-center padding>
   <ion-grid>
     <ion-col size="12">
-      <ion-button *ngIf='!access_token' href="http://localhost:8888/login" class="btn btn-primary">Log in with Spotify</ion-button>
+      <ion-button *ngIf='!access_token' href="https://nd-event-finder.herokuapp.com/login" class="btn btn-primary">Log in with Spotify</ion-button>
       <span *ngIf='access_token'>You are logged in to spotify.</span>
     </ion-col>
   </ion-grid>
