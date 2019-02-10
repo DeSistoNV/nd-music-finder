@@ -45,6 +45,7 @@ export class Tab1Page {
     topTracks;
     topArtists;
     songKick_key = 'ivWBUlnsQwVDaYvg';
+    error;
 
     loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
 
@@ -68,7 +69,7 @@ export class Tab1Page {
 
 
         if (error) {
-            alert('There was an error during the authentication');
+            this.error = JSON.stringify(error);
         } else {
             if (this.access_token) {
                 this.spotifyApi.setAccessToken(this.access_token);
