@@ -239,6 +239,8 @@ app.post('/exchange', (req, res) => {
 // Get a new access token from a refresh token
 app.post('/refresh', (req, res) => {
   const params = req.body;
+  console.log('params: ', params);
+
   if (!params.refresh_token) {
     return res.json({
       "error": "Parameter missing"
@@ -250,6 +252,7 @@ app.post('/refresh', (req, res) => {
       refresh_token: decrypt(params.refresh_token)
     })
     .then(session => {
+      console.log('session', session);
       return res.send({
           "access_token": session.access_token,
           "expires_in": session.expires_in

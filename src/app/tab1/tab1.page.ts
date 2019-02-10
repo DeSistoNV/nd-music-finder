@@ -74,7 +74,7 @@ export class Tab1Page {
         this.refresh_token = params.refresh_token;
         const error = params.error;
 
-
+        alert('access_token: ' +  this.access_token);
         if (error) {
             this.error = JSON.stringify(error);
         } else {
