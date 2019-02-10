@@ -162,6 +162,8 @@ app.get('/favicon.ico', function(req, res) {
   res.send({})
 });
 
+app.listen(80);
+
 
 // var
 //   cors = require('cors'),
