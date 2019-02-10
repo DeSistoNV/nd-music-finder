@@ -216,22 +216,28 @@ app.post('/exchange', (req, res) => {
     });
   }
 
-  spotifyRequest({
+  request.post(API_URL, {
+    form: {
       grant_type: "authorization_code",
       redirect_uri: CLIENT_CALLBACK_URL,
       code: params.code
-    })
+    },
+    headers: {
+      "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
+    },
+    json: true
+  }, (err, resp) => err ? reject(err) : resolve(resp))
     .then(session => {
-      console.log('session', session);
+      console.log('success', session.body);
       let result = {
-        "access_token": session.access_token,
-        "expires_in": session.expires_in,
-        "refresh_token": encrypt(session.refresh_token)
+        "access_token": session.body.access_token,
+        "expires_in": session.body.expires_in,
+        "refresh_token": encrypt(session.body.refresh_token)
       };
       return res.send(result);
     })
     .catch(response => {
-      console.log('caught:', response)
+      console.log('catch:', response);
       return res.json(response);
     });
 });
