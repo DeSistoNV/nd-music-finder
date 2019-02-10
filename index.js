@@ -216,7 +216,8 @@ app.post('/exchange', (req, res) => {
     });
   }
 
-  request.post(API_URL, {
+  request.post({
+    url : API_URL,
     form: {
       grant_type: "authorization_code",
       redirect_uri: CLIENT_CALLBACK_URL,
@@ -226,8 +227,7 @@ app.post('/exchange', (req, res) => {
       "Authorization": "Basic " + new Buffer(CLIENT_ID + ":" + CLIENT_SECRET).toString('base64')
     },
     json: true
-  })
-      .then(session => {
+  }, session => {
         console.log('success', session.body);
         let result = {
           "access_token": session.body.access_token,
@@ -235,11 +235,11 @@ app.post('/exchange', (req, res) => {
           "refresh_token": encrypt(session.body.refresh_token)
         };
         return res.send(result);
-    })
-    .catch(response => {
+    },
+      response => {
       console.log('catch:', response);
       return res.json(response);
-    });
+    })
 });
 
 // Get a new access token from a refresh token
