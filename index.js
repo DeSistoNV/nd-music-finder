@@ -205,6 +205,9 @@ const spotifyRequest = params => {
 app.post('/exchange', (req, res) => {
 
   const params = req.body;
+
+  console.log('code', params.code);
+
   if (!params.code) {
     return res.json({
       "error": "Parameter missing"

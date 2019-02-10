@@ -143,8 +143,9 @@ export class Tab1Page {
 
     cordova.plugins.spotifyAuth.forget();
     cordova.plugins.spotifyAuth.authorize(config)
-      .then(({ accessToken, expiresAt }) => {
-          alert(accessToken + '|' + expiresAt);
+      .then(({ accessToken, encryptedRefreshToken, expiresAt }) => {
+          const result = { access_token: accessToken, expires_in: expiresAt, ref: encryptedRefreshToken };
+          alert(JSON.stringify(result));
           this.access_token = accessToken;
           this.spotifyApi.setAccessToken(this.access_token);
       }, err => {
