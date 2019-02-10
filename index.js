@@ -14,6 +14,7 @@ var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
+var CryptoJS = require('crypto-js');
 
 var client_id = '3a8d17239bfa424eb70ca1ca1d2f2527'; // Your client id
 var client_secret = 'a07e6e022405453fa928482d9cb6aa94'; // Your secret
