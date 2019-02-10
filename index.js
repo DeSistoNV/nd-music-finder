@@ -186,6 +186,7 @@ const spotifyRequest = params => {
     })
     .then(resp => {
       if (resp.statusCode != 200) {
+        console.log(resp);
         return Promise.reject({
           statusCode: resp.statusCode,
           body: resp.body
@@ -194,6 +195,7 @@ const spotifyRequest = params => {
       return Promise.resolve(resp.body);
     })
     .catch(err => {
+      console.log(err);
       return Promise.reject({
         statusCode: 500,
         body: JSON.stringify({})
