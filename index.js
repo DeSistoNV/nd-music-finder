@@ -83,6 +83,7 @@ app.get('/callback/:isMobile', function(req, res) {
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
   var isMobile = (req.params.isMobile === 'true');
+  ru = `${redirect_uri}/${isMobile}`;
 
   console.log('code', code)
 
@@ -101,7 +102,7 @@ app.get('/callback/:isMobile', function(req, res) {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code: code,
-        redirect_uri: redirect_uri,
+        redirect_uri: ru,
         grant_type: 'authorization_code'
       },
       headers: {
