@@ -35,6 +35,7 @@ interface Artist {
     events?: Array<object>;
     nextEvent?: object;
     name?: string;
+    genres?:Array<string>;
 }
 
 
