@@ -79,36 +79,7 @@ export class Tab1Page {
         } else {
             if (this.access_token) {
                 this.spotifyApi.setAccessToken(this.access_token);
-                this.spotifyApi.getMyTopArtists({ limit: 30}).then(data => {
-                    this.topArtists = data.items;
-                    this.topArtists.forEach(A => {
-                        fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${this.songKick_key}&query=${A.name}`)
-                            .then(res => res.json())
-                            .then(res => {
-                                const artistId = res.resultsPage.results.artist[0].id;
-                                fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${this.songKick_key}`)
-                                    .then(events => events.json())
-                                    .then(events => {
-                                        A.events = events.resultsPage.results.event;
-                                        if (A.events && A.events.length) {
-                                            A.nextEvent = A.events[0];
-                                            console.log(A.nextEvent);
-                                        }
-                                    });
-                            });
-
-
-                    });
-
-
-                  }, err => {
-                    console.error(err);
-                  });
-                this.spotifyApi.getMyTopTracks({ limit: 10}).then(data => {
-                    this.topTracks = data.items;
-                  }, err => {
-                    console.error(err);
-                  });
+                this.loadData();
               }
             }
         }
@@ -145,12 +116,39 @@ export class Tab1Page {
     cordova.plugins.spotifyAuth.authorize(config)
       .then(({ accessToken, encryptedRefreshToken, expiresAt }) => {
           const result = { access_token: accessToken, expires_in: expiresAt, ref: encryptedRefreshToken };
-          alert(JSON.stringify(result));
           this.access_token = accessToken;
           this.spotifyApi.setAccessToken(this.access_token);
+          this.loadData();
       }, err => {
         alert('error: ' + err);
       });
+  }
+  loadData() {
+    this.spotifyApi.getMyTopArtists({ limit: 30}).then(data => {
+        this.topArtists = data.items;
+        this.topArtists.forEach(A => {
+            fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${this.songKick_key}&query=${A.name}`)
+                .then(res => res.json())
+                .then(res => {
+                    const artistId = res.resultsPage.results.artist[0].id;
+                    fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${this.songKick_key}`)
+                        .then(events => events.json())
+                        .then(events => {
+                            A.events = events.resultsPage.results.event;
+                            if (A.events && A.events.length) {
+                                A.nextEvent = A.events[0];
+                            }
+                        });
+                });
+        });
+    }, err => {
+        console.error(err);
+    });
+    this.spotifyApi.getMyTopTracks({ limit: 10}).then(data => {
+        this.topTracks = data.items;
+    }, err => {
+        console.error(err);
+    });
   }
 
 
