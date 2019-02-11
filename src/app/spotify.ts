@@ -53,6 +53,7 @@ interface ApiData {
     user?: User;
     topTracks?: Array<Track>;
     topArtists?: Array<Artist>;
+    genres: Array<string>;
 }
 
 @Injectable({
@@ -64,7 +65,9 @@ export class SpotifyService {
     access_token;
     spotifyApi;
     error;
-    data: ApiData = {};
+    data: ApiData = {
+        genres: []
+    };
     spotify_limit = 25;
 
     constructor() {
@@ -164,7 +167,9 @@ export class SpotifyService {
         } else {
             this.access_token = null;
         }
-        this.data = {};
+        this.data = {
+            genres: []
+        };
     }
 
 
@@ -173,12 +178,19 @@ export class SpotifyService {
         this.spotifyApi.getMyTopArtists({limit: this.spotify_limit}).then(data => {
             this.data.topArtists = data.items;
             this.data.topArtists.forEach(this.addEvents);
+            const allGenres = [];
+            this.data.topArtists.forEach(A => allGenres.push(...A.genres) );
+            this.data.genres = allGenres.filter((v, i, a) => a.indexOf(v) === i);
+            this.data.genres = this.data.genres
+                .sort((a, b) => allGenres.filter(x => x === a).length - allGenres.filter(x => x === b).length);
         }, err => {
             console.error(err);
         });
 
         this.spotifyApi.getMyTopTracks({limit: this.spotify_limit}).then(data => {
             this.data.topTracks = data.items;
+            console.log('trx', this.data.topTracks);
+
             this.data.topTracks.forEach(T => {
                 if (T.artists.length) {
                     T.firstArtist = T.artists[0];

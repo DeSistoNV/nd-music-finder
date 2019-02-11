@@ -1,3 +1,26 @@
-<ion-content>
-  Coming Soon.
+<ion-content text-center padding>
+
+    <ion-list *ngIf='spotifyService.data.genres'>
+        <ion-list-header>Top Genres</ion-list-header>
+        <ion-item *ngFor="let genre of spotifyService.data.genres" text-wrap>
+            <!--<ion-thumbnail>-->
+                <!--<img src="{{ track.album.images[2].url }}">-->
+            <!--</ion-thumbnail>-->
+            <ion-label>
+              {{ genre }}<br>
+              <!--<ion-text color="medium">{{ track.firstArtist.name }}</ion-text>-->
+
+            </ion-label>
+            <!--&lt;!&ndash;<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">&ndash;&gt;-->
+            <!--&lt;!&ndash;{{ artist.nextEvent.displayName}}&ndash;&gt;-->
+            <!--&lt;!&ndash;</ion-text>&ndash;&gt;-->
+            <!--<a *ngIf="track.firstArtist.nextEvent" style="font-size:.7rem" href="{{track.firstArtist.nextEvent.uri}}" target="_system">-->
+                <!--&lt;!&ndash;{{ artist.nextEvent.venue.displayName}}&ndash;&gt;-->
+                <!--{{ track.firstArtist.nextEvent.venue.metroArea.displayName}}-->
+                <!--{{ track.firstArtist.nextEvent.start.date | date:'M/d/yy' }}-->
+            <!--</a>-->
+
+        </ion-item>
+    </ion-list>
+
 </ion-content>
