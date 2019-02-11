@@ -1,25 +1,44 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Top Artists
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>
+            Top Artists
+        </ion-title>
+
+
+
+        <span class="log-in-out">
+            <img *ngIf='data.user' class='user-image' src="{{ data.user.firstImage.url }}">
+
+            <ion-button *ngIf='!access_token' (click)="authorize()">
+                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
+                Log in
+            </ion-button>
+
+            <ion-button *ngIf='access_token' (click)="logOut()">
+                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
+                Log Out
+            </ion-button>
+        </span>
+
+
+
+
+
+    </ion-toolbar>
 </ion-header>
 
 <ion-content text-center padding>
-  <ion-grid>
-    <ion-col size="12">
-      <ion-button *ngIf='!access_token' (click)="authorize()" class="btn btn-primary">Log in with Spotify</ion-button>
-        <span style="text:red">{{ error }}</span>
-      <span *ngIf='access_token'>You are logged in to spotify.</span>
-    </ion-col>
-  </ion-grid>
+    <ion-grid>
+        <ion-col size="12">
 
 
+        </ion-col>
+    </ion-grid>
 
-    <ion-list *ngIf='topArtists'>
-      <ion-list-header>Top Artists</ion-list-header>
-        <ion-item  *ngFor="let artist of topArtists" text-wrap>
+
+    <ion-list *ngIf='data.topArtists'>
+        <ion-list-header>Top Artists</ion-list-header>
+        <ion-item *ngFor="let artist of data.topArtists" text-wrap>
             <ion-thumbnail>
                 <img src="{{ artist.images[2].url }}">
             </ion-thumbnail>
@@ -28,9 +47,9 @@
 
             </ion-label>
             <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
-                <!--{{ artist.nextEvent.displayName}}-->
+            <!--{{ artist.nextEvent.displayName}}-->
             <!--</ion-text>-->
-            <a *ngIf="artist.nextEvent" style="font-size:.7rem" href="{{artist.nextEvent.uri}}"  target="_system">
+            <a *ngIf="artist.nextEvent" style="font-size:.7rem" href="{{artist.nextEvent.uri}}" target="_system">
                 <!--{{ artist.nextEvent.venue.displayName}}-->
                 {{ artist.nextEvent.venue.metroArea.displayName}}
                 {{ artist.nextEvent.start.date | date:'M/d/yy' }}

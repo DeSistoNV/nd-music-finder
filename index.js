@@ -72,7 +72,7 @@ app.get('/login/:isMobile', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-top-read';
+  var scope = 'user-top-read user-read-birthdate';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',

@@ -11,6 +11,22 @@ interface Params {
   error ?: string;
 }
 
+interface User {
+    firstImage?: object;
+    images?: Array<object>;
+}
+
+interface Artist {
+    events?: Array<object>;
+    nextEvent?: object;
+    name?: string
+}
+interface ApiData {
+    user?: User;
+    topTracks?: Array<object>;
+    topArtists?: Array<Artist>;
+}
+
 const isMobile = {
     Android: function() {
         return navigator.userAgent.match(/Android/i);
@@ -47,10 +63,9 @@ export class Tab1Page {
     access_token;
     refresh_token;
     spotifyApi;
-    topTracks;
-    topArtists;
     songKick_key = 'ivWBUlnsQwVDaYvg';
     error;
+    data: ApiData = {};
 
     loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
 
@@ -84,6 +99,7 @@ export class Tab1Page {
             }
         }
 
+
     // document.getElementById('obtain-new-token').addEventListener('click', function() {
     refreshToken() {
         fetch('http://localhost:8888/refresh_token',
@@ -107,7 +123,7 @@ export class Tab1Page {
         const config = {
           clientId: '3a8d17239bfa424eb70ca1ca1d2f2527',
           redirectUrl: 'nd-event-finder://callback',
-          scopes: ['user-top-read'],
+          scopes: ['user-top-read', 'user-read-birthdate'],
           tokenExchangeUrl: 'https://nd-event-finder.herokuapp.com/exchange',
           tokenRefreshUrl: 'https://nd-event-finder.herokuapp.com/refresh_token',
         };
@@ -123,10 +139,18 @@ export class Tab1Page {
         alert('error: ' + err);
       });
   }
+  logOut() {
+        if (isMobile.any()) {
+            cordova.plugins.spotifyAuth.forget();
+        } else {
+            this.access_token = null;
+        }
+        this.data = {};
+  }
   loadData() {
-    this.spotifyApi.getMyTopArtists({ limit: 30}).then(data => {
-        this.topArtists = data.items;
-        this.topArtists.forEach(A => {
+    this.spotifyApi.getMyTopArtists({ limit: 50}).then(data => {
+        this.data.topArtists = data.items;
+        this.data.topArtists.forEach(A => {
             fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${this.songKick_key}&query=${A.name}`)
                 .then(res => res.json())
                 .then(res => {
@@ -145,9 +169,16 @@ export class Tab1Page {
         console.error(err);
     });
     this.spotifyApi.getMyTopTracks({ limit: 10}).then(data => {
-        this.topTracks = data.items;
+        this.data.topTracks = data.items;
+        console.log(this.data.topTracks);
     }, err => {
         console.error(err);
+    });
+
+    this.spotifyApi.getMe().then(data => {
+        this.data.user = data;
+        this.data.user.firstImage = this.data.user.images[0];
+        console.log('user', this.data.user);
     });
   }
 
