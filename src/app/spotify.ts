@@ -38,7 +38,6 @@ interface Artist {
 }
 
 
-
 interface Params {
     access_token?: string;
     refresh_token?: string;
@@ -64,11 +63,9 @@ export class SpotifyService {
     loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
     access_token;
     spotifyApi;
-    songKick_key = 'ivWBUlnsQwVDaYvg';
     error;
     data: ApiData = {};
-
-    spotifWebApi;
+    spotify_limit = 25;
 
     constructor() {
         const spotifyBS: any = SpotifyWebApi;
@@ -98,6 +95,28 @@ export class SpotifyService {
         }
         return hashParams;
     }
+    addEvents(A: Artist) {
+        const songKickKey = 'ivWBUlnsQwVDaYvg';
+        fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songKickKey}&query=${A.name}`)
+            .then(res => res.json())
+            .then(res => {
+                if (res.resultsPage.results.artist && res.resultsPage.results.artist.length) {
+                    const artistId = res.resultsPage.results.artist[0].id;
+                    fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${songKickKey}`)
+                        .then(events => events.json())
+                        .then(events => {
+                            A.events = events.resultsPage.results.event;
+                            if (A.events && A.events.length) {
+                                A.nextEvent = A.events[0];
+                            }
+                        });
+                } else {
+                    console.log(`${A.name} not found on SongKick`);
+                }
+
+            });
+    }
+
 
     refreshToken() {
         // document.getElementById('obtain-new-token').addEventListener('click', function() {
@@ -148,30 +167,25 @@ export class SpotifyService {
         this.data = {};
     }
 
+
     loadData() {
-        this.spotifyApi.getMyTopArtists({limit: 50}).then(data => {
+
+        this.spotifyApi.getMyTopArtists({limit: this.spotify_limit}).then(data => {
             this.data.topArtists = data.items;
-            this.data.topArtists.forEach(A => {
-                fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${this.songKick_key}&query=${A.name}`)
-                    .then(res => res.json())
-                    .then(res => {
-                        const artistId = res.resultsPage.results.artist[0].id;
-                        fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${this.songKick_key}`)
-                            .then(events => events.json())
-                            .then(events => {
-                                A.events = events.resultsPage.results.event;
-                                if (A.events && A.events.length) {
-                                    A.nextEvent = A.events[0];
-                                }
-                            });
-                    });
-            });
+            this.data.topArtists.forEach(this.addEvents);
         }, err => {
             console.error(err);
         });
-        this.spotifyApi.getMyTopTracks({limit: 10}).then(data => {
+
+        this.spotifyApi.getMyTopTracks({limit: this.spotify_limit}).then(data => {
             this.data.topTracks = data.items;
-            this.data.topTracks.forEach(T => T.firstArtist = T.artists[0]);
+            this.data.topTracks.forEach(T => {
+                if (T.artists.length) {
+                    T.firstArtist = T.artists[0];
+                    this.addEvents(T.artists[0]);
+                }
+
+            });
             console.log(this.data.topTracks);
         }, err => {
             console.error(err);

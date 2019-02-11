@@ -4,7 +4,7 @@
         <ion-list-header>Top Artists</ion-list-header>
         <ion-item *ngFor="let track of spotifyService.data.topTracks" text-wrap>
             <ion-thumbnail>
-                <img src="{{ track.images[2].url }}">
+                <img src="{{ track.album.images[2].url }}">
             </ion-thumbnail>
             <ion-label>
                 {{ track.name }} - {{ track.firstArtist.name }}
@@ -13,10 +13,10 @@
             <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
             <!--{{ artist.nextEvent.displayName}}-->
             <!--</ion-text>-->
-            <a *ngIf="track.nextEvent" style="font-size:.7rem" href="{{track.nextEvent.uri}}" target="_system">
+            <a *ngIf="track.firstArtist.nextEvent" style="font-size:.7rem" href="{{track.firstArtist.nextEvent.uri}}" target="_system">
                 <!--{{ artist.nextEvent.venue.displayName}}-->
-                {{ track.nextEvent.venue.metroArea.displayName}}
-                {{ track.nextEvent.start.date | date:'M/d/yy' }}
+                {{ track.firstArtist.nextEvent.venue.metroArea.displayName}}
+                {{ track.firstArtist.nextEvent.start.date | date:'M/d/yy' }}
             </a>
 
         </ion-item>
