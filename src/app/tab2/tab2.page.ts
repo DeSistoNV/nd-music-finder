@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {SpotifyService} from '../spotify';
 
 @Component({
   selector: 'app-tab2',
@@ -8,7 +9,9 @@ import { Component } from '@angular/core';
 
 
 export class Tab2Page {
-
+      constructor(
+        public spotifyService: SpotifyService
+    ) {}
 
 }
 

@@ -1,3 +1,31 @@
 <ion-app>
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            MusicFinder
+        </ion-title>
+
+
+
+        <span class="log-in-out">
+            <img *ngIf='spotifyService.data.user' class='user-image' src="{{ spotifyService.data.user.firstImage.url }}">
+
+            <ion-button *ngIf='!spotifyService.access_token' (click)="spotifyService.authorize()">
+                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
+                Log in
+            </ion-button>
+
+            <ion-button *ngIf='spotifyService.access_token' (click)="spotifyService.logOut()">
+                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
+                Log Out
+            </ion-button>
+        </span>
+
+
+
+
+
+    </ion-toolbar>
+</ion-header>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

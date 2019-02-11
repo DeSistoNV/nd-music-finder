@@ -1,44 +1,8 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>
-            Top Artists
-        </ion-title>
-
-
-
-        <span class="log-in-out">
-            <img *ngIf='data.user' class='user-image' src="{{ data.user.firstImage.url }}">
-
-            <ion-button *ngIf='!access_token' (click)="authorize()">
-                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
-                Log in
-            </ion-button>
-
-            <ion-button *ngIf='access_token' (click)="logOut()">
-                <img class='spotify-logo' src="assets/spotify-icons-logos/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png">
-                Log Out
-            </ion-button>
-        </span>
-
-
-
-
-
-    </ion-toolbar>
-</ion-header>
-
 <ion-content text-center padding>
-    <ion-grid>
-        <ion-col size="12">
 
-
-        </ion-col>
-    </ion-grid>
-
-
-    <ion-list *ngIf='data.topArtists'>
+    <ion-list *ngIf='spotifyService.data.topArtists'>
         <ion-list-header>Top Artists</ion-list-header>
-        <ion-item *ngFor="let artist of data.topArtists" text-wrap>
+        <ion-item *ngFor="let artist of spotifyService.data.topArtists" text-wrap>
             <ion-thumbnail>
                 <img src="{{ artist.images[2].url }}">
             </ion-thumbnail>

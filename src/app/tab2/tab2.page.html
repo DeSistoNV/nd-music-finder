@@ -1,7 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Top Songs
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content text-center padding>
+
+    <ion-list *ngIf='spotifyService.data.topTracks'>
+        <ion-list-header>Top Artists</ion-list-header>
+        <ion-item *ngFor="let track of spotifyService.data.topTracks" text-wrap>
+            <ion-thumbnail>
+                <img src="{{ track.images[2].url }}">
+            </ion-thumbnail>
+            <ion-label>
+                {{ track.name }} - {{ track.firstArtist.name }}
+
+            </ion-label>
+            <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
+            <!--{{ artist.nextEvent.displayName}}-->
+            <!--</ion-text>-->
+            <a *ngIf="track.nextEvent" style="font-size:.7rem" href="{{track.nextEvent.uri}}" target="_system">
+                <!--{{ artist.nextEvent.venue.displayName}}-->
+                {{ track.nextEvent.venue.metroArea.displayName}}
+                {{ track.nextEvent.start.date | date:'M/d/yy' }}
+            </a>
+
+        </ion-item>
+    </ion-list>
+
+</ion-content>

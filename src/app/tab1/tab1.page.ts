@@ -1,54 +1,13 @@
 import { Component } from '@angular/core';
-import * as SpotifyWebApi from 'spotify-web-api-js';
 import { IonicPage } from 'ionic-angular';
 
-declare var cordova: any;
+
+import {SpotifyService} from '../spotify';
+import {Platform} from '@ionic/angular';
+import {SplashScreen} from '@ionic-native/splash-screen/ngx';
+import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 
-interface Params {
-  access_token?: string;
-  refresh_token?: string;
-  error ?: string;
-}
-
-interface User {
-    firstImage?: object;
-    images?: Array<object>;
-}
-
-interface Artist {
-    events?: Array<object>;
-    nextEvent?: object;
-    name?: string
-}
-interface ApiData {
-    user?: User;
-    topTracks?: Array<object>;
-    topArtists?: Array<Artist>;
-}
-
-const isMobile = {
-    Android: function() {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function() {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function() {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function() {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function() {
-        return navigator.userAgent.match(/IEMobile/i);
-    },
-    any: function() {
-        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-    }
-};
-
-@IonicPage()
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -59,130 +18,9 @@ const isMobile = {
 
 export class Tab1Page {
 
-
-    access_token;
-    refresh_token;
-    spotifyApi;
-    songKick_key = 'ivWBUlnsQwVDaYvg';
-    error;
-    data: ApiData = {};
-
-    loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
-
-
-
-    static getHashParams() {
-        const hashParams: Params = {};
-        let e = /([^&;=]+)=?([^&;]*)/g;
-        const r = /([^&;=]+)=?([^&;]*)/g;
-        const q = window.location.hash.substring(1);
-        while (e = r.exec(q) as any) {
-            hashParams[e[1]] = decodeURIComponent(e[2]);
-        }
-        return hashParams;
-    }
-    constructor() {
-        const spotifyBS: any = SpotifyWebApi;
-        this.spotifyApi = new spotifyBS();
-        const params = Tab1Page.getHashParams();
-        this.access_token = params.access_token;
-        this.refresh_token = params.refresh_token;
-        const error = params.error;
-
-        if (error) {
-            this.error = JSON.stringify(error);
-        } else {
-            if (this.access_token) {
-                this.spotifyApi.setAccessToken(this.access_token);
-                this.loadData();
-              }
-            }
-        }
-
-
-    // document.getElementById('obtain-new-token').addEventListener('click', function() {
-    refreshToken() {
-        fetch('http://localhost:8888/refresh_token',
-            {
-                body: JSON.stringify({
-                    'refresh_token': this.refresh_token
-                })
-            }).then(res => console.log(res));
-    }
-
-    authorize() {
-        if (isMobile.any()) {
-            this.mobileAuthWithSpotify();
-        } else {
-            location.href = this.loginApi;
-
-        }
-    }
-
-    mobileAuthWithSpotify() {
-        const config = {
-          clientId: '3a8d17239bfa424eb70ca1ca1d2f2527',
-          redirectUrl: 'nd-event-finder://callback',
-          scopes: ['user-top-read', 'user-read-birthdate'],
-          tokenExchangeUrl: 'https://nd-event-finder.herokuapp.com/exchange',
-          tokenRefreshUrl: 'https://nd-event-finder.herokuapp.com/refresh_token',
-        };
-
-    cordova.plugins.spotifyAuth.forget();
-    cordova.plugins.spotifyAuth.authorize(config)
-      .then(({ accessToken, encryptedRefreshToken, expiresAt }) => {
-          const result = { access_token: accessToken, expires_in: expiresAt, ref: encryptedRefreshToken };
-          this.access_token = accessToken;
-          this.spotifyApi.setAccessToken(this.access_token);
-          this.loadData();
-      }, err => {
-        alert('error: ' + err);
-      });
-  }
-  logOut() {
-        if (isMobile.any()) {
-            cordova.plugins.spotifyAuth.forget();
-        } else {
-            this.access_token = null;
-        }
-        this.data = {};
-  }
-  loadData() {
-    this.spotifyApi.getMyTopArtists({ limit: 50}).then(data => {
-        this.data.topArtists = data.items;
-        this.data.topArtists.forEach(A => {
-            fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${this.songKick_key}&query=${A.name}`)
-                .then(res => res.json())
-                .then(res => {
-                    const artistId = res.resultsPage.results.artist[0].id;
-                    fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${this.songKick_key}`)
-                        .then(events => events.json())
-                        .then(events => {
-                            A.events = events.resultsPage.results.event;
-                            if (A.events && A.events.length) {
-                                A.nextEvent = A.events[0];
-                            }
-                        });
-                });
-        });
-    }, err => {
-        console.error(err);
-    });
-    this.spotifyApi.getMyTopTracks({ limit: 10}).then(data => {
-        this.data.topTracks = data.items;
-        console.log(this.data.topTracks);
-    }, err => {
-        console.error(err);
-    });
-
-    this.spotifyApi.getMe().then(data => {
-        this.data.user = data;
-        this.data.user.firstImage = this.data.user.images[0];
-        console.log('user', this.data.user);
-    });
-  }
-
-
+    constructor(
+        public spotifyService: SpotifyService
+    ) {}
 }
 
 
