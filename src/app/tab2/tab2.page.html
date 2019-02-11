@@ -7,7 +7,8 @@
                 <img src="{{ track.album.images[2].url }}">
             </ion-thumbnail>
             <ion-label>
-                {{ track.name }} - {{ track.firstArtist.name }}
+              {{ track.name }}<br>
+              <ion-text color="medium">{{ track.firstArtist.name }}</ion-text>
 
             </ion-label>
             <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
