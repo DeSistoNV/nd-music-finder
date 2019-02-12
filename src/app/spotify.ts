@@ -1,30 +1,17 @@
 import {Observable, of} from 'rxjs';
-import {Injectable} from '@angular/core';
+import * as _ from 'lodash';
+
+import {Injectable, } from '@angular/core';
 
 import * as SpotifyWebApi from 'spotify-web-api-js';
+import {NativeGeocoder, NativeGeocoderReverseResult} from '@ionic-native/native-geocoder/ngx';
+import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 declare var cordova: any;
 
-const isMobile = {
-    Android: function () {
-        return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function () {
-        return navigator.userAgent.match(/BlackBerry/i);
-    },
-    iOS: function () {
-        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function () {
-        return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function () {
-        return navigator.userAgent.match(/IEMobile/i);
-    },
-    any: function () {
-        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-    }
-};
+
+
+const isApp = !document.URL.startsWith('http');
 
 interface User {
     firstImage?: object;
@@ -35,7 +22,7 @@ interface Artist {
     events?: Array<object>;
     nextEvent?: object;
     name?: string;
-    genres?:Array<string>;
+    genres?: Array<string>;
 }
 
 
@@ -62,16 +49,28 @@ interface ApiData {
 })
 export class SpotifyService {
     refresh_token;
-    loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
+    loginApi;
     access_token;
     spotifyApi;
     error;
+    lat;
+    lng;
+    searchRadii = ['50', '100', '250', '500'];
+    searchRadius = this.searchRadii[3];
     data: ApiData = {
         genres: []
     };
     spotify_limit = 25;
 
-    constructor() {
+    constructor(
+        private geolocation: Geolocation,
+        private nativeGeocoder: NativeGeocoder
+    ) {
+        this.locate();
+
+        console.log('SpotifyService');
+
+        this.loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isApp}`;
         const spotifyBS: any = SpotifyWebApi;
         this.spotifyApi = new spotifyBS();
         const params = SpotifyService.getHashParams();
@@ -99,7 +98,22 @@ export class SpotifyService {
         }
         return hashParams;
     }
+
+    withinDistance(events) {
+        const searchRadius = parseInt(this.searchRadius, 10);
+        return events.filter(E => this.calculateDistance(E.location.lat, E.location.lng) < searchRadius);
+    }
+
+    calculateDistance(lat: number, lng: number) {
+        const p = 0.017453292519943295;    // Math.PI / 180
+        const c = Math.cos;
+        const a = 0.5 - c((this.lat - lat) * p) / 2 + c(lat * p) * c((this.lat) * p) * (1 - c(((this.lng - lng) * p))) / 2;
+        const dis = (12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
+        return Math.round(dis * 0.621371);
+    }
+
     addEvents(A: Artist) {
+        A.events = [];
         const songKickKey = 'ivWBUlnsQwVDaYvg';
         fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songKickKey}&query=${A.name}`)
             .then(res => res.json())
@@ -108,10 +122,11 @@ export class SpotifyService {
                     const artistId = res.resultsPage.results.artist[0].id;
                     fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${songKickKey}`)
                         .then(events => events.json())
-                        .then(events => {
-                            A.events = events.resultsPage.results.event;
-                            if (A.events && A.events.length) {
-                                A.nextEvent = A.events[0];
+                        .then(data => {
+                            const events = data.resultsPage.results.event;
+                            console.log('events', events);
+                            if (events) {
+                                A.events = events;
                             }
                         });
                 } else {
@@ -121,7 +136,22 @@ export class SpotifyService {
             });
     }
 
+    locate() {
+        this.geolocation.getCurrentPosition().then((resp) => {
+            console.log(resp);
+            this.lat = resp.coords.latitude;
+            this.lng = resp.coords.longitude;
+            this.nativeGeocoder.reverseGeocode(this.lat, this.lng, {
+                useLocale: true,
+                maxResults: 5
+            }).then((result: NativeGeocoderReverseResult[]) => {
+                console.log('reverseGeocode', result);
+            }).catch((error: any) => console.log(error));
 
+        }).catch((error) => {
+            console.log('Error getting location', error);
+        });
+    }
     refreshToken() {
         // document.getElementById('obtain-new-token').addEventListener('click', function() {
         fetch('http://localhost:8888/refresh_token',
@@ -133,7 +163,7 @@ export class SpotifyService {
     }
 
     authorize() {
-        if (isMobile.any()) {
+        if (isApp) {
             this.mobileAuthWithSpotify();
         } else {
             location.href = this.loginApi;
@@ -163,7 +193,7 @@ export class SpotifyService {
     }
 
     logOut() {
-        if (isMobile.any()) {
+        if (isApp) {
             cordova.plugins.spotifyAuth.forget();
         } else {
             this.access_token = null;
@@ -190,7 +220,7 @@ export class SpotifyService {
 
         this.spotifyApi.getMyTopTracks({limit: this.spotify_limit}).then(data => {
             this.data.topTracks = data.items;
-            console.log('trx', this.data.topTracks);
+            console.log('Tracks', this.data.topTracks);
 
             this.data.topTracks.forEach(T => {
                 if (T.artists.length) {
@@ -199,7 +229,6 @@ export class SpotifyService {
                 }
 
             });
-            console.log(this.data.topTracks);
         }, err => {
             console.error(err);
         });
@@ -212,3 +241,4 @@ export class SpotifyService {
     }
 
 }
+

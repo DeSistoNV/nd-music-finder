@@ -13,11 +13,14 @@
             <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
             <!--{{ artist.nextEvent.displayName}}-->
             <!--</ion-text>-->
-            <a *ngIf="artist.nextEvent" style="font-size:.7rem" href="{{artist.nextEvent.uri}}" target="_system">
-                <!--{{ artist.nextEvent.venue.displayName}}-->
-                {{ artist.nextEvent.venue.metroArea.displayName}}
-                {{ artist.nextEvent.start.date | date:'M/d/yy' }}
-            </a>
+            <ion-chip  *ngFor="let event of spotifyService.withinDistance(artist.events) | slice:0:3" color="tertiary">
+                <a class="event-link" href="{{ event.uri }}" target="_system">
+                    <!--{{ artist.nextEvent.venue.displayName}}-->
+                    {{ event.venue.metroArea.displayName}}
+                    {{ event.start.date | date:'M/d/yy' }}
+                    ({{ spotifyService.calculateDistance(event.venue.lat, event.venue.lng)  }} mi)
+                </a>
+            </ion-chip>
 
         </ion-item>
     </ion-list>

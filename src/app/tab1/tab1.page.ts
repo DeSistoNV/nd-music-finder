@@ -17,10 +17,12 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 
 
 export class Tab1Page {
-
+    searchRadius;
     constructor(
         public spotifyService: SpotifyService
-    ) {}
+    ) {
+        this.searchRadius = 500;
+    }
 }
 
 
