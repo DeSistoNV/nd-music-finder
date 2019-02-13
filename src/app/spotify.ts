@@ -1,5 +1,6 @@
 import {Observable, of} from 'rxjs';
 import * as _ from 'lodash';
+import { HttpClient } from '@angular/common/http';
 
 import {Injectable, } from '@angular/core';
 
@@ -9,6 +10,9 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
 
 declare var cordova: any;
 
+import { Subject } from 'rxjs';
+
+import 'rxjs/add/operator/map';
 
 
 const isApp = !document.URL.startsWith('http');
@@ -23,6 +27,7 @@ interface Artist {
     nextEvent?: object;
     name?: string;
     genres?: Array<string>;
+    id?: string;
 }
 
 
@@ -44,10 +49,24 @@ interface ApiData {
     genres: Array<string>;
 }
 
+interface SongKickArtist {
+    artist?: Array<Artist>;
+    event?: Array<Event>;
+}
+
+interface SongKickResults {
+    results?: SongKickArtist ;
+}
+
+interface SongKickResponse {
+    resultsPage?: SongKickResults;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class SpotifyService {
+    // todo: type these
     refresh_token;
     loginApi;
     access_token;
@@ -56,17 +75,37 @@ export class SpotifyService {
     lat;
     lng;
     searchRadii = ['50', '100', '250', '500'];
-    searchRadius = this.searchRadii[3];
+    _searchRadius;
+    radiusChange: Subject<any> = new Subject();
+    dataChange: Subject<any> = new Subject();
+
+    get searchRadius() {
+        return this._searchRadius;
+    }
+
+    set searchRadius(newRadius) {
+        this._searchRadius = newRadius;
+        this.radiusChange.next('newRadius');
+
+    }
+
     data: ApiData = {
-        genres: []
+        genres: [],
+        topArtists: [],
+        topTracks: [],
     };
     spotify_limit = 25;
 
     constructor(
         private geolocation: Geolocation,
-        private nativeGeocoder: NativeGeocoder
+        private nativeGeocoder: NativeGeocoder,
+        private http: HttpClient
+
     ) {
         this.locate();
+
+        this._searchRadius = this.searchRadii[2];
+
 
         console.log('SpotifyService');
 
@@ -100,8 +139,11 @@ export class SpotifyService {
     }
 
     withinDistance(events) {
-        const searchRadius = parseInt(this.searchRadius, 10);
-        return events.filter(E => this.calculateDistance(E.location.lat, E.location.lng) < searchRadius);
+        if (!events) {
+            return;
+        }
+        const searchRadius = parseInt(this._searchRadius, 10);
+        return events.filter(E => this.calculateDistance(E.venue.lat, E.venue.lng) < searchRadius);
     }
 
     calculateDistance(lat: number, lng: number) {
@@ -112,22 +154,25 @@ export class SpotifyService {
         return Math.round(dis * 0.621371);
     }
 
-    addEvents(A: Artist) {
-        A.events = [];
+    addEvents = (A: Artist) => {
         const songKickKey = 'ivWBUlnsQwVDaYvg';
-        fetch(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songKickKey}&query=${A.name}`)
-            .then(res => res.json())
-            .then(res => {
+        A.events = [];
+        // todo: fix this fuckery.
+        const me = this;
+        this.http.get<SongKickResponse>(`https://api.songkick.com/api/3.0/search/artists.json?apikey=${songKickKey}&query=${A.name}`)
+            .subscribe(res => {
                 if (res.resultsPage.results.artist && res.resultsPage.results.artist.length) {
                     const artistId = res.resultsPage.results.artist[0].id;
-                    fetch(`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${songKickKey}`)
-                        .then(events => events.json())
-                        .then(data => {
+                    this.http.get<SongKickResponse>
+                    (`https://api.songkick.com/api/3.0/artists/${artistId}/calendar.json?apikey=${songKickKey}`)
+                        .subscribe(data => {
                             const events = data.resultsPage.results.event;
-                            console.log('events', events);
+                            // console.log('events', events);
                             if (events) {
                                 A.events = events;
                             }
+                            me.dataChange.next('songKickEvents');
+
                         });
                 } else {
                     console.log(`${A.name} not found on SongKick`);
@@ -214,19 +259,23 @@ export class SpotifyService {
             this.data.genres = allGenres.filter((v, i, a) => a.indexOf(v) === i);
             this.data.genres = this.data.genres
                 .sort((a, b) => allGenres.filter(x => x === a).length - allGenres.filter(x => x === b).length);
+            this.dataChange.next('getMyTopArtists');
+
         }, err => {
             console.error(err);
         });
 
         this.spotifyApi.getMyTopTracks({limit: this.spotify_limit}).then(data => {
             this.data.topTracks = data.items;
-            console.log('Tracks', this.data.topTracks);
+            // console.log('Tracks', this.data.topTracks);
 
             this.data.topTracks.forEach(T => {
                 if (T.artists.length) {
                     T.firstArtist = T.artists[0];
                     this.addEvents(T.artists[0]);
                 }
+                this.dataChange.next('getMyTopTracks');
+
 
             });
         }, err => {
@@ -236,7 +285,9 @@ export class SpotifyService {
         this.spotifyApi.getMe().then(data => {
             this.data.user = data;
             this.data.user.firstImage = this.data.user.images[0];
-            console.log('user', this.data.user);
+            // console.log('user', this.data.user);
+            this.dataChange.next('getMe');
+
         });
     }
 

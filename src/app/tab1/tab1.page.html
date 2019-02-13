@@ -1,5 +1,7 @@
 <ion-content text-center padding>
 
+    <div id="map" style="width:100%; height:45%;top:50px;"></div>
+
     <ion-list *ngIf='spotifyService.data.topArtists'>
         <ion-list-header>Top Artists</ion-list-header>
         <ion-item *ngFor="let artist of spotifyService.data.topArtists" text-wrap>
