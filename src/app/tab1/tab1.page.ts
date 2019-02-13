@@ -84,20 +84,12 @@ export class Tab1Page {
         this.map = L.map('map').fitWorld();
         this.homeMarkerGroup = L.featureGroup();
 
-        const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18
-        });
-        this.map.addLayer(osm);
-
-        const clouds = L.OWM.clouds({showLegend: false, opacity: 0.5, appId: 'c968ec1bd21cf1577e65d5cba488d516'});
-
-        const baseMaps = { 'OSM Standard': osm };
-        const overlayMaps = { 'Clouds': clouds };
-        const layerControl = L.control.layers(baseMaps, overlayMaps).addTo(this.map);
-
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 15
         }).addTo(this.map);
+
+        const clouds = L.OWM.clouds({showLegend: false, opacity: 0.5, appId: 'c968ec1bd21cf1577e65d5cba488d516'});
+        this.map.addLayer(clouds);
 
         this.map.locate().on('locationfound', (e) => {
 
