@@ -56,6 +56,7 @@
     "ionic-angular": "^3.9.3",
     "ionic-plugin-deeplinks": "1.0.17",
     "leaflet": "^1.4.0",
+    "leaflet-openweathermap": "^1.0.0",
     "leaflet.awesome-markers": "^2.0.5",
     "lodash": "^4.17.11",
     "qs": "^6.6.0",
