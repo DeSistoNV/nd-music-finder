@@ -10,15 +10,11 @@ import {SpotifyService} from '../spotify';
 
 
 export class EventChip {
-    _event: Event;
+    @Input() event: Event;
+
     constructor(
         private spotifyService: SpotifyService,
     ) {}
-
-    @Input() set event(e: Event) {
-        console.log('got event', e);
-        this._event = e;
-    }
 
 }
 
