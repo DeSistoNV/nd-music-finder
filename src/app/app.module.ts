@@ -8,8 +8,6 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-
 import { IonicStorageModule } from '@ionic/storage';
 
 import {Platform} from '@ionic/angular';
@@ -17,9 +15,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {
     NativeGeocoder,
-    NativeGeocoderReverseResult,
-    NativeGeocoderForwardResult,
-    NativeGeocoderOptions
 } from '@ionic-native/native-geocoder/ngx';
 
 @NgModule({
@@ -39,7 +34,6 @@ import {
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Geolocation,
     NativeGeocoder,
     Platform
   ],

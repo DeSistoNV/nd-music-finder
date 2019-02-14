@@ -6,7 +6,6 @@ import {SpotifyService} from '../spotify';
 import {Platform} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
-import {Geolocation} from '@ionic-native/geolocation/ngx';
 import * as L from 'leaflet';
 import 'leaflet.awesome-markers';
 import 'leaflet-openweathermap';
@@ -30,8 +29,7 @@ export class Tab1Page {
 
 
     constructor(
-        public spotifyService: SpotifyService,
-        private geolocation: Geolocation,
+        public spotifyService: SpotifyService
     ) {
         console.log(this.spotifyService);
         this.spotifyService.radiusChange.subscribe(this.renderMarkers);
