@@ -4,7 +4,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
-import {EventChipModule} from '../event-chip/event-chip.module';
+import { EventChipModule } from '../event-chip/event-chip.module';
+import { EventMapModule } from '../event-map/event-map.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import {EventChipModule} from '../event-chip/event-chip.module';
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: Tab1Page }]),
-    EventChipModule
+    EventChipModule,
+    EventMapModule
   ],
   declarations: [
       Tab1Page

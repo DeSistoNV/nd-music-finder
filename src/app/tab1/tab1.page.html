@@ -1,6 +1,6 @@
 <ion-content text-center padding>
 
-    <div id="map" style="width:100%; height:45%;top:50px;"></div>
+    <event-map [reloadSubject]="viewEnter"></event-map>
     <event-chip></event-chip>
     <ion-list *ngIf='spotifyService.data.topArtists'>
         <ion-list-header>Top Artists</ion-list-header>

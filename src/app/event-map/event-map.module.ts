@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EventChip } from './event-chip';
+import { EventMap } from './event-map';
 import { IonicModule } from '@ionic/angular';
 
 @NgModule({
@@ -9,10 +9,12 @@ import { IonicModule } from '@ionic/angular';
         IonicModule
     ],
     exports: [
-        EventChip
+        EventMap
     ],
     declarations: [
-        EventChip
+        EventMap
+    ],
+    providers: [
     ]
 })
-export class EventChipModule {}
+export class EventMapModule {}

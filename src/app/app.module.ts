@@ -14,6 +14,7 @@ import {Platform} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     NativeGeocoder,
-    Platform
+    Platform,
+    Geolocation
   ],
   bootstrap: [AppComponent]
 })

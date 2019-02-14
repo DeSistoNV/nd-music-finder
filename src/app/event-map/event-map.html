@@ -1,8 +1,1 @@
-<ion-chip color="tertiary" *ngIf="event">
-   <a class="event-link" [attr.href]="event.uri" target="_system">
-       <!--{{ artist.next_event.venue.displayName}}-->
-       {{ event.venue.metroArea.displayName}}
-        {{ event.start.date | date:'M/d/yy' }}
-       ({{ spotifyService.calculateDistance(event.venue.lat, event.venue.lng)  }} mi)
-   </a>
-</ion-chip>
+<div id="map" style="width:100%; height:45%;top:50px;"></div>
