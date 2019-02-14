@@ -5,6 +5,15 @@ interface User {
 interface Track {
     artists?: Array<Artist>;
     firstArtist?: Artist;
+    name?: string;
+    album?: Album;
+}
+
+interface Image {
+    url?: string;
+}
+interface Album {
+    images?: Array<Image>;
 }
 interface MetroArea {
     displayName?: string;
