@@ -13,9 +13,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import {Platform} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {
-    NativeGeocoder,
-} from '@ionic-native/native-geocoder/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 
 @NgModule({
   declarations: [
