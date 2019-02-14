@@ -38,12 +38,13 @@ export class Tab1Page {
     }
 
     ionViewDidEnter() {
+        // todo: recenter map here
         this.loadmap();
 
         this.renderMarkers('manual');
     }
 
-
+    // todo: map directive, share across tabs
     makeMarker(fp) {
         return L.icon({
                 iconUrl: fp,
@@ -83,6 +84,7 @@ export class Tab1Page {
     };
 
     loadmap() {
+        if (this.map) return;
         const fullScreenCtrl = L.control.fullscreen();
 
         this.map = L.map('map', {

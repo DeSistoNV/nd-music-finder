@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab1Page } from './tab1.page';
-import {EventChip} from '../event-chip/event-chip';
+import {EventChipModule} from '../event-chip/event-chip.module';
 
 @NgModule({
   imports: [
@@ -12,11 +12,10 @@ import {EventChip} from '../event-chip/event-chip';
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: Tab1Page }]),
+    EventChipModule
   ],
   declarations: [
-      Tab1Page,
-      EventChip
-
+      Tab1Page
   ]
 })
 export class Tab1PageModule {}

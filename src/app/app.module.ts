@@ -15,7 +15,6 @@ import { IonicStorageModule } from '@ionic/storage';
 import {Platform} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import {
     NativeGeocoder,
     NativeGeocoderReverseResult,
@@ -24,7 +23,9 @@ import {
 } from '@ionic-native/native-geocoder/ngx';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+      AppComponent
+  ],
   entryComponents: [],
   imports: [
       BrowserModule,

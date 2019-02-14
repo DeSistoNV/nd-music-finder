@@ -3,26 +3,32 @@
     <ion-list *ngIf='spotifyService.data.topTracks'>
         <ion-list-header>Top Artists</ion-list-header>
         <ion-item *ngFor="let track of spotifyService.data.topTracks" text-wrap>
-            <ion-thumbnail>
-                <img src="{{ track.album.images[2].url }}">
-            </ion-thumbnail>
-            <ion-label>
-              {{ track.name }}<br>
-              <ion-text color="medium">{{ track.firstArtist.name }}</ion-text>
+            <ion-grid>
+                <ion-row>
+                    <ion-col col-3 col-sm-12>
+                        <ion-thumbnail>
+                            <img [src]="track.album.images[2].url">
+                        </ion-thumbnail>
 
-            </ion-label>
-            <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
-            <!--{{ artist.nextEvent.displayName}}-->
-            <!--</ion-text>-->
+                        <ion-label>
+                            {{ track.name }}
+                            <ion-text color="medium">{{ track.firstArtist.name }}</ion-text>
 
-            <ion-chip  *ngFor="let event of spotifyService.withinDistance(track.firstArtist.events) | slice:0:3" color="tertiary">
-                <a class="event-link" href="{{ event.uri }}" target="_system">
-                    <!--{{ artist.nextEvent.venue.displayName}}-->
-                    {{ event.venue.metroArea.displayName}}
-                    {{ event.start.date | date:'M/d/yy' }}
-                    ({{ spotifyService.calculateDistance(event.venue.lat, event.venue.lng)  }} mi)
-                </a>
-            </ion-chip>
+                        </ion-label>
+                    </ion-col>
+                    <ion-col col-3 col-sm-12>
+                       <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
+                       <!--{{ artist.nextEvent.displayName}}-->
+                       <!--</ion-text>-->
+                       <event-chip
+                    *ngFor="let event of spotifyService.withinDistance(track.firstArtist.events) | slice:0:3"
+                               [event]="event"
+                       >
+                       </event-chip>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
 
         </ion-item>
     </ion-list>
