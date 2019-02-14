@@ -26,6 +26,7 @@ export class Tab1Page {
     eventMarkerGroup = L.featureGroup();
     homeMarkerGroup = L.featureGroup();
     searchRadiusCircle;
+    bounds;
 
 
     constructor(
@@ -38,8 +39,15 @@ export class Tab1Page {
     }
 
     ionViewDidEnter() {
-        // todo: recenter map here
-        this.loadmap();
+        if (this.map) {
+            if (this.bounds && this.bounds.isValid()) {
+                this.map.fitBounds(this.bounds);
+            } else {
+                this.map.fitWorld();
+            }
+        } else {
+            this.loadmap();
+        }
 
         this.renderMarkers('manual');
     }
@@ -84,9 +92,6 @@ export class Tab1Page {
     };
 
     loadmap() {
-        if (this.map) return;
-        const fullScreenCtrl = L.control.fullscreen();
-
         this.map = L.map('map', {
                 fullscreenControl: true,
         }).fitWorld();
@@ -124,7 +129,8 @@ export class Tab1Page {
 
             const bounds = this.homeMarkerGroup.getBounds().extend(this.eventMarkerGroup.getBounds());
             if (bounds.isValid()) {
-                this.map.fitBounds(bounds.pad(1));
+                this.bounds = bounds.pad(1);
+                this.map.fitBounds(this.bounds);
             }
 
 
