@@ -38,6 +38,14 @@ export class Tab1Page {
         this.spotifyService.dataChange.subscribe(this.renderMarkers);
     }
 
+    static makeMarker(fp) {
+        return L.icon({
+                iconUrl: fp,
+                iconSize:     [38, 95], // size of the icon
+                iconAnchor:   [19, 48], // point of the icon which will correspond to marker's location
+        });
+    }
+
     ionViewDidEnter() {
         if (this.map) {
             if (this.bounds && this.bounds.isValid()) {
@@ -53,13 +61,7 @@ export class Tab1Page {
     }
 
     // todo: map directive, share across tabs
-    makeMarker(fp) {
-        return L.icon({
-                iconUrl: fp,
-                iconSize:     [38, 95], // size of the icon
-                iconAnchor:   [19, 48], // point of the icon which will correspond to marker's location
-        });
-    }
+
 
     renderMarkers = (x) => {
 
@@ -73,7 +75,7 @@ export class Tab1Page {
                   this.spotifyService.withinDistance(A.events).forEach(E => {
                       const title = `${A.name}@${E.venue.displayName}`;
                       const m: any = L.marker([E.venue.lat, E.venue.lng], {
-                          icon: this.makeMarker('assets/music.svg'),
+                          icon: Tab1Page.makeMarker('assets/music.svg'),
                           title: title
                       }).on('click', () => {
                           alert(title);
@@ -119,7 +121,7 @@ export class Tab1Page {
             ).addTo(this.map);
 
             const marker: any = L.marker([e.latitude, e.longitude], {
-                icon: this.makeMarker('assets/home.svg')
+                icon: Tab1Page.makeMarker('assets/home.svg')
             }).on('click', () => {
                 alert('Marker clicked');
             });
