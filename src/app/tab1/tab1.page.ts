@@ -32,6 +32,7 @@ export class Tab1Page {
         public spotifyService: SpotifyService,
         private geolocation: Geolocation,
     ) {
+        console.log(this.spotifyService);
         this.spotifyService.radiusChange.subscribe(this.renderMarkers);
         this.spotifyService.dataChange.subscribe(this.renderMarkers);
     }

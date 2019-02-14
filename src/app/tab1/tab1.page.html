@@ -1,7 +1,7 @@
 <ion-content text-center padding>
 
     <div id="map" style="width:100%; height:45%;top:50px;"></div>
-
+    <event-chip></event-chip>
     <ion-list *ngIf='spotifyService.data.topArtists'>
         <ion-list-header>Top Artists</ion-list-header>
         <ion-item *ngFor="let artist of spotifyService.data.topArtists" text-wrap>
@@ -20,14 +20,11 @@
                        <!--<ion-text *ngIf="artist.nextEvent" style="font-size:.7rem">-->
                        <!--{{ artist.nextEvent.displayName}}-->
                        <!--</ion-text>-->
-                       <ion-chip  *ngFor="let event of spotifyService.withinDistance(artist.events) | slice:0:3" color="tertiary">
-                           <a class="event-link" href="{{ event.uri }}" target="_system">
-                               <!--{{ artist.nextEvent.venue.displayName}}-->
-                               {{ event.venue.metroArea.displayName}}
-                                {{ event.start.date | date:'M/d/yy' }}
-                               ({{ spotifyService.calculateDistance(event.venue.lat, event.venue.lng)  }} mi)
-                           </a>
-                       </ion-chip>
+                       <event-chip
+                               *ngFor="let event of spotifyService.withinDistance(artist.events) | slice:0:3"
+                               [event]="event"
+                       >
+                       </event-chip>
                     </ion-col>
                 </ion-row>
             </ion-grid>

@@ -14,6 +14,8 @@ import { Subject } from 'rxjs';
 
 import 'rxjs/add/operator/map';
 
+import {Params, Artist, SongKickResponse, ApiData} from './interface';
+
 
 const isMobile = {
     Android: function () {
@@ -36,51 +38,6 @@ const isMobile = {
     }
 };
 
-
-interface User {
-    firstImage?: object;
-    images?: Array<object>;
-}
-
-interface Artist {
-    events?: Array<object>;
-    nextEvent?: object;
-    name?: string;
-    genres?: Array<string>;
-    id?: string;
-}
-
-
-interface Params {
-    access_token?: string;
-    refresh_token?: string;
-    error?: string;
-}
-
-interface Track {
-    artists?: Array<Artist>;
-    firstArtist?: Artist;
-}
-
-interface ApiData {
-    user?: User;
-    topTracks?: Array<Track>;
-    topArtists?: Array<Artist>;
-    genres: Array<string>;
-}
-
-interface SongKickArtist {
-    artist?: Array<Artist>;
-    event?: Array<Event>;
-}
-
-interface SongKickResults {
-    results?: SongKickArtist ;
-}
-
-interface SongKickResponse {
-    resultsPage?: SongKickResults;
-}
 
 @Injectable({
     providedIn: 'root',
