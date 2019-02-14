@@ -32,7 +32,6 @@ export class AppComponent {
         public spotifyService: SpotifyService
     ) {
         this.initializeApp();
-        console.log('AppComponent');
     }
 
     initializeApp() {
