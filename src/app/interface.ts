@@ -46,6 +46,7 @@ export interface Artist {
     name?: string;
     genres?: Array<string>;
     id?: string;
+    images?: Array<string>;
 }
 export interface Params {
     access_token?: string;
