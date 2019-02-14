@@ -2,14 +2,14 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            MusicFinder
+            MF
         </ion-title>
 
         <!--todo: fix placement for phone-->
          <ion-item *ngIf='spotifyService.data.user' id="search-radius">
             <ion-label>Search Radius</ion-label>
 
-             <ion-select  [(ngModel)]="spotifyService.searchRadius">
+             <ion-select  [(ngModel)]="spotifyService.searchRadius" style="margin-left:-4px;">
               <ion-select-option *ngFor="let val of spotifyService.searchRadii" value="{{ val }}" [selected]="val == spotifyService.searchRadius">{{ val }}</ion-select-option>
             </ion-select>
 

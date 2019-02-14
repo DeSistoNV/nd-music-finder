@@ -10,6 +10,7 @@ import {Geolocation} from '@ionic-native/geolocation/ngx';
 import * as L from 'leaflet';
 import 'leaflet.awesome-markers';
 import 'leaflet-openweathermap';
+import 'leaflet-fullscreen';
 
 @Component({
     selector: 'app-tab1',
@@ -60,12 +61,12 @@ export class Tab1Page {
           this.spotifyService.data.topArtists.forEach(A => {
               if (A.events) {
                   this.spotifyService.withinDistance(A.events).forEach(E => {
-                      console.log(E);
+                      const title = `${A.name}@${E.venue.displayName}`;
                       const m: any = L.marker([E.venue.lat, E.venue.lng], {
                           icon: this.makeMarker('assets/music.svg'),
-                          title: `${A.name}@${E.venue.displayName}`
+                          title: title
                       }).on('click', () => {
-                          alert('Marker clicked');
+                          alert(title);
                       });
                       this.eventMarkerGroup.addLayer(m);
                   });
@@ -78,11 +79,16 @@ export class Tab1Page {
               this.map.fitBounds(bounds.pad(1));
             }
 
-    }
+    };
 
     loadmap() {
-        this.map = L.map('map').fitWorld();
+        const fullScreenCtrl = L.control.fullscreen();
+
+        this.map = L.map('map', {
+                fullscreenControl: true,
+        }).fitWorld();
         this.homeMarkerGroup = L.featureGroup();
+
 
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 15

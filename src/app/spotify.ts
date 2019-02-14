@@ -15,7 +15,27 @@ import { Subject } from 'rxjs';
 import 'rxjs/add/operator/map';
 
 
-const isApp = !document.URL.startsWith('http');
+const isMobile = {
+    Android: function () {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function () {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function () {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function () {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function () {
+        return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function () {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
 
 interface User {
     firstImage?: object;
@@ -109,7 +129,7 @@ export class SpotifyService {
 
         console.log('SpotifyService');
 
-        this.loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isApp}`;
+        this.loginApi = `https://nd-event-finder.herokuapp.com/login/${!!isMobile.any()}`;
         const spotifyBS: any = SpotifyWebApi;
         this.spotifyApi = new spotifyBS();
         const params = SpotifyService.getHashParams();
@@ -208,7 +228,7 @@ export class SpotifyService {
     }
 
     authorize() {
-        if (isApp) {
+        if (isMobile.any()) {
             this.mobileAuthWithSpotify();
         } else {
             location.href = this.loginApi;
@@ -238,7 +258,7 @@ export class SpotifyService {
     }
 
     logOut() {
-        if (isApp) {
+        if (isMobile.any()) {
             cordova.plugins.spotifyAuth.forget();
         } else {
             this.access_token = null;
